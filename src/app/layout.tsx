@@ -3,9 +3,9 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Risee — AI Architect & Creator",
+  title: "Adit — AI Architect & Digital Creator",
   description: "I build intelligent digital systems — AI-powered websites, automation pipelines, and viral content engines that scale without limits.",
-  keywords: ["AI", "Automation", "Web Development", "YouTube", "Content Creation", "Digital Systems"],
+  keywords: ["AI", "Automation", "Web Development", "YouTube", "Content Creation", "Digital Systems", "AI Architect", "Prompt Engineering", "AI Strategy", "Viral Systems"],
   authors: [{ name: "Adit" }],
   icons: {
     icon: "/logo.png",
@@ -27,12 +27,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Adit",
+    "jobTitle": "AI Architect & Digital Creator",
+    "description": "I build intelligent digital systems — AI-powered websites, automation pipelines, and viral content engines that scale without limits.",
+    "url": "https://adit.profile"
+  };
+
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body
         className={`antialiased bg-background text-foreground`}

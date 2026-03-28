@@ -418,6 +418,35 @@ function HeroSection() {
       onMouseLeave={handleMouseLeave}
       id="hero"
     >
+      {/* Floating Geometric Shapes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{
+            x: rotateY * 20,
+            y: rotateX * 20,
+            rotate: [0, 10, 0]
+          }}
+          className="absolute top-[20%] left-[15%] w-12 h-12 border border-[#38d9f5]/20 rounded-lg"
+          style={{ transformStyle: 'preserve-3d' }}
+        />
+        <motion.div
+          animate={{
+            x: -rotateY * 15,
+            y: -rotateX * 15,
+            rotate: [0, -15, 0]
+          }}
+          className="absolute bottom-[25%] right-[20%] w-16 h-16 border border-[#f0c040]/20 rounded-full"
+        />
+        <motion.div
+          animate={{
+            x: rotateY * 10,
+            y: -rotateX * 10,
+          }}
+          className="absolute top-[40%] right-[10%] w-8 h-8 bg-gradient-to-br from-[#38d9f5]/10 to-transparent blur-sm"
+          style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+        />
+      </div>
+
       <motion.div
         ref={contentRef}
         className="text-center max-w-4xl"
@@ -431,15 +460,16 @@ function HeroSection() {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.6 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex justify-center group"
           style={{ transform: 'translateZ(40px)' }}
         >
           <div className="relative w-32 h-32 md:w-40 md:h-40">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#f0c040] to-[#38d9f5] blur-md opacity-60 animate-pulse" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#f0c040] to-[#38d9f5] blur-md opacity-60 animate-pulse group-hover:opacity-100 group-hover:blur-xl transition-all duration-500" />
             <Image
               src="/logo.png"
-              alt="Risee Profile"
+              alt="Adit Profile"
               fill
               className="rounded-full object-cover relative z-10 border-2 border-[#38d9f5]/30"
               priority
@@ -462,20 +492,42 @@ function HeroSection() {
           <span className="text-[11px] tracking-[0.14em] uppercase text-[#38d9f5]">Available for new projects</span>
         </motion.div>
 
-        {/* Main Title */}
+        {/* Main Title with staggered reveal */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.2
+              }
+            }
+          }}
           className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-[-3px] mb-6"
           style={{ fontFamily: 'Syne, sans-serif', transform: 'translateZ(20px)' }}
         >
-          <span className="bg-gradient-to-br from-[#f0c040] to-[#e8a020] bg-clip-text text-transparent">AI</span>{' '}
-          Architect
+          <motion.span
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="bg-gradient-to-br from-[#f0c040] to-[#e8a020] bg-clip-text text-transparent inline-block"
+          >
+            AI
+          </motion.span>{' '}
+          <motion.span
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="inline-block"
+          >
+            Architect
+          </motion.span>
           <br />
-          <span className="bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(56,217,245,0.4)]">
+          <motion.span
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            className="bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(56,217,245,0.4)] inline-block"
+          >
             &amp; Digital Creator
-          </span>
+          </motion.span>
         </motion.h1>
 
         {/* Tagline */}
