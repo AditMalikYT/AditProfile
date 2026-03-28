@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "next build && powershell -Command \"Copy-Item -Recurse .next/static .next/standalone/.next/\" && powershell -Command \"Copy-Item -Recurse public .next/standalone/\"",
+    "build": "CI=true next build && powershell -Command \"Copy-Item -Recurse .next/static .next/standalone/.next/\" && powershell -Command \"Copy-Item -Recurse public .next/standalone/\"",
     "start": "bun .next/standalone/server.js",
     "lint": "eslint .",
     "db:push": "prisma db push",
@@ -77,7 +77,6 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
-    "z-ai-web-dev-sdk": "^0.0.17",
     "zod": "^4.0.2",
     "zustand": "^5.0.6"
   },

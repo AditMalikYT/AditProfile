@@ -438,7 +438,7 @@ function HeroSection() {
           <div className="relative w-32 h-32 md:w-40 md:h-40">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#f0c040] to-[#38d9f5] blur-md opacity-60 animate-pulse" />
             <Image
-              src="/profile.png"
+              src="/logo.png"
               alt="Risee Profile"
               fill
               className="rounded-full object-cover relative z-10 border-2 border-[#38d9f5]/30"
