@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "CI=true next build && powershell -Command \"Copy-Item -Recurse .next/static .next/standalone/.next/\" && powershell -Command \"Copy-Item -Recurse public .next/standalone/\"",
+    "build": "CI=true next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "bun .next/standalone/server.js",
     "lint": "eslint .",
     "db:push": "prisma db push",
