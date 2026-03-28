@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useSpring } from 'framer-motion'
 import Image from 'next/image'
 import emailjs from '@emailjs/browser'
 import {
@@ -23,8 +23,31 @@ import {
 // ============================================
 
 export default function Home() {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
   return (
-    <div className="relative min-h-screen bg-[#020408] text-[#e8edf5] overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#020408] text-[#e8edf5] overflow-x-hidden selection:bg-[#38d9f5]/30">
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#38d9f5] to-[#4c8ef7] z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
+      {/* Noise Texture Overlay */}
+      <div className="fixed inset-0 z-[99] pointer-events-none opacity-[0.03] mix-blend-overlay">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noise)" />
+        </svg>
+      </div>
+
       {/* Particle Network Background */}
       <ParticleNetwork />
 
@@ -69,37 +92,39 @@ function Navigation() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-[#020408]/90 backdrop-blur-md' : 'bg-gradient-to-b from-[#020408]/90 to-transparent'
-      }`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-16 py-5 flex items-center justify-between">
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl z-50 transition-all duration-500">
+      <div className={`w-full px-6 py-3 flex items-center justify-between rounded-full border transition-all duration-500 ${scrolled
+          ? 'bg-[#020408]/70 backdrop-blur-xl border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+          : 'bg-transparent border-transparent'
+        }`}>
         <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent" style={{ fontFamily: 'Syne, sans-serif', letterSpacing: '-0.5px' }}>
           ADIT
         </div>
-        <div className="hidden md:flex items-center gap-10">
-          <a href="#skills" className="text-xs font-medium tracking-widest uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-colors relative group">
+        <div className="hidden md:flex items-center gap-8">
+          <a href="#skills" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
             Skills
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
           </a>
-          <a href="#examples" className="text-xs font-medium tracking-widest uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-colors relative group">
+          <a href="#examples" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
             Examples
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
           </a>
-          <a href="#pricing" className="text-xs font-medium tracking-widest uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-colors relative group">
+          <a href="#pricing" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
             Pricing
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
           </a>
-          <a href="#contact" className="text-xs font-medium tracking-widest uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-colors relative group">
+          <a href="#contact" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
             Contact
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
           </a>
         </div>
-        <a href="#pricing" className="px-6 py-2.5 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-semibold text-sm hover:shadow-[0_0_30px_rgba(56,217,245,0.4)] transition-all duration-300 hover:scale-105">
+        <a href="#pricing" className="px-5 py-2 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-bold text-[11px] tracking-wider uppercase hover:shadow-[0_0_30px_rgba(56,217,245,0.4)] transition-all duration-300 hover:scale-105">
           Hire Me
         </a>
       </div>
@@ -619,7 +644,7 @@ function SkillsSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4"
+          className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
           style={{ fontFamily: 'Syne, sans-serif' }}
         >
           What I<br />
@@ -687,10 +712,10 @@ function SkillCard({
       initial={{ opacity: 0, y: 32 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -8, scale: 1.02 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="skill-card relative p-5 rounded-2xl bg-[#0d1424] border border-[rgba(99,179,237,0.12)] overflow-hidden transition-all duration-300"
+      className="skill-card relative p-6 rounded-2xl bg-white/[0.02] backdrop-blur-md border border-white/[0.08] overflow-hidden transition-all duration-500"
       style={{
         transformStyle: 'preserve-3d',
         transform: isHovered ? 'rotateX(4deg)' : 'none',
@@ -779,7 +804,7 @@ function ExamplesSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4"
+            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
             style={{ fontFamily: 'Syne, sans-serif' }}
           >
             Featured<br />
@@ -834,8 +859,8 @@ function ExampleCard({
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay }}
-      whileHover={{ y: -10, scale: 1.02 }}
-      className="group relative rounded-2xl overflow-hidden border border-[rgba(99,179,237,0.12)] bg-[#0d1424] hover:shadow-[0_30px_80px_rgba(0,0,0,0.4)] transition-all duration-400"
+      whileHover={{ y: -12, scale: 1.03 }}
+      className="group relative rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_30px_80px_rgba(0,0,0,0.5)] transition-all duration-500"
       data-cursor-hover
     >
       {/* Animated Canvas Preview */}
@@ -851,9 +876,9 @@ function ExampleCard({
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <div className="text-[10px] tracking-[0.12em] uppercase text-[#38d9f5] mb-2">{tag}</div>
-        <h3 className="text-lg font-bold mb-2 group-hover:text-[#38d9f5] transition-colors" style={{ fontFamily: 'Syne, sans-serif' }}>
+      <div className="p-6">
+        <div className="text-[10px] tracking-[0.12em] uppercase text-[#38d9f5] mb-2 font-bold">{tag}</div>
+        <h3 className="text-xl font-bold mb-3 group-hover:text-[#38d9f5] transition-colors text-balance" style={{ fontFamily: 'Syne, sans-serif' }}>
           {title}
         </h3>
         <p className="text-[13px] text-[#6b7c9a] leading-relaxed line-clamp-2">
@@ -1086,7 +1111,7 @@ function PricingSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4"
+            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
             style={{ fontFamily: 'Syne, sans-serif' }}
           >
             Simple,<br />
@@ -1145,10 +1170,10 @@ function PricingCard({
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay }}
-      whileHover={{ y: -8 }}
-      className={`relative rounded-3xl p-8 overflow-hidden transition-all duration-300 ${featured
-        ? 'bg-gradient-to-br from-[rgba(56,217,245,0.08)] to-[rgba(76,142,247,0.08)] border-2 border-[rgba(56,217,245,0.4)] shadow-[0_0_60px_rgba(56,217,245,0.1)]'
-        : 'bg-[#0d1424] border border-[rgba(99,179,237,0.12)]'
+      whileHover={{ y: -12, scale: 1.02 }}
+      className={`relative rounded-3xl p-8 overflow-hidden transition-all duration-500 ${featured
+        ? 'bg-gradient-to-br from-[#38d9f5]/10 to-[#4c8ef7]/10 border-2 border-[#38d9f5]/30 shadow-[0_0_60px_rgba(56,217,245,0.15)]'
+        : 'bg-white/[0.02] backdrop-blur-md border border-white/[0.08]'
         }`}
       data-cursor-hover
     >
@@ -1284,42 +1309,42 @@ function ContactSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="space-y-5"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-xs font-medium tracking-widest uppercase text-[#6b7c9a] mb-3">
+              <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] mb-4">
                 Name
               </label>
               <input
                 type="text"
                 name="user_name"
                 required
-                className="w-full px-5 py-4 rounded-xl bg-[#0d1424] border border-[rgba(99,179,237,0.12)] text-[#e8edf5] placeholder-[#6b7c9a]/50 focus:border-[#38d9f5] focus:outline-none focus:shadow-[0_0_20px_rgba(56,217,245,0.1)] transition-all duration-300"
+                className="w-full px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/10 text-[#e8edf5] placeholder-[#6b7c9a]/30 focus:border-[#38d9f5]/50 focus:outline-none focus:ring-1 focus:ring-[#38d9f5]/30 transition-all duration-300"
                 placeholder="Your name"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium tracking-widest uppercase text-[#6b7c9a] mb-3">
+              <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] mb-4">
                 Email
               </label>
               <input
                 type="email"
                 name="user_email"
                 required
-                className="w-full px-5 py-4 rounded-xl bg-[#0d1424] border border-[rgba(99,179,237,0.12)] text-[#e8edf5] placeholder-[#6b7c9a]/50 focus:border-[#38d9f5] focus:outline-none focus:shadow-[0_0_20px_rgba(56,217,245,0.1)] transition-all duration-300"
+                className="w-full px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/10 text-[#e8edf5] placeholder-[#6b7c9a]/30 focus:border-[#38d9f5]/50 focus:outline-none focus:ring-1 focus:ring-[#38d9f5]/30 transition-all duration-300"
                 placeholder="your@email.com"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium tracking-widest uppercase text-[#6b7c9a] mb-3">
+            <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] mb-4">
               Message
             </label>
             <textarea
               name="message"
               required
-              rows={5}
-              className="w-full px-5 py-4 rounded-xl bg-[#0d1424] border border-[rgba(99,179,237,0.12)] text-[#e8edf5] placeholder-[#6b7c9a]/50 focus:border-[#38d9f5] focus:outline-none focus:shadow-[0_0_20px_rgba(56,217,245,0.1)] transition-all duration-300 resize-none"
+              rows={6}
+              className="w-full px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/10 text-[#e8edf5] placeholder-[#6b7c9a]/30 focus:border-[#38d9f5]/50 focus:outline-none focus:ring-1 focus:ring-[#38d9f5]/30 transition-all duration-300 resize-none"
               placeholder="Tell me about your project..."
             />
           </div>
@@ -1352,19 +1377,26 @@ function ContactSection() {
 // ============================================
 function Footer() {
   return (
-    <footer id="contact" className="border-t border-[rgba(99,179,237,0.12)] py-10 px-6 md:px-16">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent" style={{ fontFamily: 'Syne, sans-serif' }}>
-          ADIT
+    <footer className="border-t border-white/5 py-12 px-6 md:px-16 bg-[#020408]">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="flex flex-col items-center md:items-start gap-2">
+          <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent" style={{ fontFamily: 'Syne, sans-serif' }}>
+            ADIT
+          </div>
+          <div className="text-[11px] font-medium tracking-widest uppercase text-[#6b7c9a]/60">
+            Architecting the future of AI
+          </div>
         </div>
-        <div className="text-[13px] text-[#6b7c9a]">
-          © {new Date().getFullYear()} — All rights reserved
+
+        <div className="text-[12px] text-[#6b7c9a] font-medium">
+          © {new Date().getFullYear()} — Designed & Built with passion
         </div>
-        <div className="flex gap-6">
+
+        <div className="flex gap-8">
           {/* ✏️ EDIT CONTACT LINKS BELOW */}
-          <a href="#" className="text-[#6b7c9a] text-[13px] hover:text-[#38d9f5] transition-colors">Telegram</a>
-          <a href="#" className="text-[#6b7c9a] text-[13px] hover:text-[#38d9f5] transition-colors">YouTube</a>
-          <a href="#" className="text-[#6b7c9a] text-[13px] hover:text-[#38d9f5] transition-colors">Email</a>
+          <a href="#" className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300">Telegram</a>
+          <a href="#" className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300">YouTube</a>
+          <a href="#" className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300">Email</a>
           {/* END CONTACT LINKS */}
         </div>
       </div>
