@@ -103,7 +103,7 @@ function Navigation() {
           ? 'bg-[#020408]/70 backdrop-blur-xl border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
           : 'bg-transparent border-transparent'
         }`}>
-        <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent" style={{ fontFamily: 'Syne, sans-serif', letterSpacing: '-0.5px' }}>
+        <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent font-syne tracking-[-0.5px]">
           ADIT
         </div>
         <div className="hidden md:flex items-center gap-8">
@@ -603,8 +603,8 @@ function HeroSection() {
               }
             }
           }}
-          className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-[-3px] mb-6"
-          style={{ fontFamily: 'Syne, sans-serif', transform: 'translateZ(20px)' }}
+          className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-[-3px] mb-6 font-syne"
+          style={{ transform: 'translateZ(20px)' }}
         >
           <motion.span
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
@@ -720,8 +720,7 @@ function SkillsSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
-          style={{ fontFamily: 'Syne, sans-serif' }}
+          className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance font-syne"
         >
           What I<br />
           <span className="text-[#38d9f5]">Master</span>
@@ -818,7 +817,7 @@ function SkillCard({
         <div className="text-3xl mb-3 flex justify-center">
           {getIconComponent(name)}
         </div>
-        <div className="text-sm font-bold mb-1 text-center" style={{ fontFamily: 'Syne, sans-serif' }}>{name}</div>
+        <div className="text-sm font-bold mb-1 text-center font-syne">{name}</div>
         <div className="text-[11px] text-[#6b7c9a] mb-3 text-center">{level}</div>
 
         {/* Progress Bar */}
@@ -847,22 +846,43 @@ function ExamplesSection() {
   const examples = [
     {
       title: 'Local Business AI Site',
-      tag: 'AI Website',
+      tag: 'Web Dev & AI',
       description: 'AI-generated business landing page built with ChatGPT + Hostinger Horizons. Full SEO + design.',
       animationType: 'wave' as const,
       link: '#pricing',
     },
     {
       title: 'Rice & Plants Bot',
-      tag: 'Telegram Bot',
+      tag: 'Automation & Bot',
       description: 'Daily planner bot for productivity, built in Telegram with smart AI-driven scheduling.',
       animationType: 'nodes' as const,
       link: '#pricing',
     },
     {
       title: 'YT SEO for Channel',
-      tag: 'YouTube Channel',
+      tag: 'YouTube & Viral',
       description: 'AI-generated SEO-optimized title, description, thumbnail, and videos with cultural relevance, automated end-to-end.',
+      animationType: 'bars' as const,
+      link: '#pricing',
+    },
+    {
+      title: 'Sentiment-AI Hub',
+      tag: 'ML & Prompting',
+      description: 'Custom fine-tuned LLM for analyzing customer psychology and sentiment in real-time support pipelines.',
+      animationType: 'nodes' as const,
+      link: '#pricing',
+    },
+    {
+      title: 'Aura Art Engine',
+      tag: 'Generative Art',
+      description: 'An AI pipeline that generates hyper-realistic brand assets and viral social media visual content.',
+      animationType: 'wave' as const,
+      link: '#pricing',
+    },
+    {
+      title: 'Influence Architect',
+      tag: 'Psychology & Viral',
+      description: 'Strategic growth engine leveraging psychological triggers to boost engagement by 300% on TikTok/Instagram.',
       animationType: 'bars' as const,
       link: '#pricing',
     },
@@ -880,8 +900,7 @@ function ExamplesSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
-            style={{ fontFamily: 'Syne, sans-serif' }}
+            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance font-syne"
           >
             Featured<br />
             <span className="text-[#f0c040]">Examples</span>
@@ -892,11 +911,11 @@ function ExamplesSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-[#6b7c9a] text-base max-w-md leading-relaxed"
           >
-            Real projects delivered. Replace these with your own network and project examples.
+            Real projects delivered. Representing my full stack of skills from AI Automation to Generative Art.
           </motion.p>
         </div>
 
-        {/* ✏️ EDIT EXAMPLES BELOW - Bento Grid Layout */}
+        {/* ✏️ EDIT EXAMPLES BELOW - Expanded Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[300px]">
           <ExampleCard
             {...examples[0]}
@@ -914,6 +933,24 @@ function ExamplesSection() {
             {...examples[2]}
             isInView={isInView}
             delay={0.2}
+            className="md:col-span-1 md:row-span-1"
+          />
+          <ExampleCard
+            {...examples[3]}
+            isInView={isInView}
+            delay={0.3}
+            className="md:col-span-1 md:row-span-1"
+          />
+          <ExampleCard
+            {...examples[4]}
+            isInView={isInView}
+            delay={0.4}
+            className="md:col-span-2 md:row-span-1"
+          />
+          <ExampleCard
+            {...examples[5]}
+            isInView={isInView}
+            delay={0.5}
             className="md:col-span-2 md:row-span-1"
           />
         </div>
@@ -993,8 +1030,8 @@ function ExampleCard({
             {tag}
           </motion.div>
           <h3
-            style={{ transform: 'translateZ(50px)', fontFamily: 'Syne, sans-serif' }}
-            className="text-2xl font-extrabold mb-4 group-hover:text-[#38d9f5] transition-colors leading-tight"
+            style={{ transform: 'translateZ(50px)' }}
+            className="text-2xl font-extrabold mb-4 group-hover:text-[#38d9f5] transition-colors leading-tight font-syne"
           >
             {title}
           </h3>
@@ -1181,52 +1218,52 @@ function PricingSection() {
 
   const plans = [
     {
-      name: 'Website Starter',
-      price: '$99',
+      name: 'AI Presence',
+      price: '$299',
       period: '/one-time',
-      description: 'Perfect for small businesses wanting a clean AI-generated web presence.',
+      description: 'Essential AI-driven website and SEO setup for modern businesses.',
       features: [
-        { text: '1-Page AI Website', included: true },
-        { text: 'Basic SEO Setup', included: true },
-        { text: 'Mobile Responsive', included: true },
-        { text: '3-day Delivery', included: true },
-        { text: 'Custom Animations', included: false },
-        { text: 'AI Chatbot', included: false },
+        { text: 'AI Website (Hostinger Horizons)', included: true },
+        { text: 'SEO & Intent Research', included: true },
+        { text: 'ChatGPT Prompting Suite', included: true },
+        { text: 'Mobile Responsive Design', included: true },
+        { text: 'Custom 3D UI Elements', included: false },
+        { text: 'Python Automation', included: false },
       ],
       featured: false,
-      cta: 'Contact Me',
+      cta: 'Get Started',
     },
     {
-      name: 'Video Automation',
-      price: '$149',
+      name: 'Growth Engine',
+      price: '$899',
       period: '/month',
-      description: 'Automated YouTube content creation with AI-generated videos and optimization.',
+      description: 'Scale your brand with automated content and intelligent workflows.',
       features: [
-        { text: 'YT SEO Keyword & Intent Research', included: true },
-        { text: 'SEO Optimization', included: true },
-        { text: 'Thumbnail Design', included: true },
-        { text: 'Auto-Uploading', included: true },
-        { text: 'Analytics Dashboard', included: true },
-        { text: 'Priority Support', included: false },
+        { text: 'YouTube Channel Automation', included: true },
+        { text: 'Viral Hook & Video SEO', included: true },
+        { text: 'Zapier & Python Workflows', included: true },
+        { text: 'Telegram Bot Integration', included: true },
+        { text: 'Thumbnail & Asset Design', included: true },
+        { text: 'Priority 24/7 Support', included: true },
       ],
       featured: true,
-      cta: 'Contact Me',
+      cta: 'Start Scaling',
     },
     {
-      name: 'AI Automation',
-      price: '$249',
+      name: 'AI Enterprise',
+      price: '$1,999',
       period: '/month',
-      description: 'Full automation suite — bots, workflows, and AI integrations for your business.',
+      description: 'Bespoke AI solutions, machine learning, and full system dominance.',
       features: [
-        { text: 'Custom Telegram Bot', included: true },
-        { text: 'Workflow Automation', included: true },
-        { text: 'API Integrations', included: true },
-        { text: 'AI Chatbot Setup', included: true },
-        { text: 'Content Pipelines', included: true },
-        { text: 'Priority Support', included: true },
+        { text: 'Custom LLM Fine-tuning', included: true },
+        { text: 'Enterprise ML Pipelines', included: true },
+        { text: 'Advanced Bot Architecture', included: true },
+        { text: 'Psychology-driven Growth', included: true },
+        { text: 'Bespoke Dashboard UI', included: true },
+        { text: 'Dedicated Account Manager', included: true },
       ],
       featured: false,
-      cta: 'Coming Soon',
+      cta: 'Consult Now',
     },
   ]
 
@@ -1242,8 +1279,7 @@ function PricingSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance"
-            style={{ fontFamily: 'Syne, sans-serif' }}
+            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 text-balance font-syne"
           >
             Simple,<br />
             <span className="text-[#38d9f5]">Transparent</span> Pricing
@@ -1321,12 +1357,12 @@ function PricingCard({
       )}
 
       {/* Plan Name */}
-      <div className="text-sm font-bold text-[#6b7c9a] tracking-[0.1em] uppercase mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
+      <div className="text-sm font-bold text-[#6b7c9a] tracking-[0.1em] uppercase mb-2 font-syne">
         {name}
       </div>
 
       {/* Price */}
-      <div className="text-5xl font-extrabold tracking-[-2px] mb-1" style={{ fontFamily: 'Syne, sans-serif' }}>
+      <div className="text-5xl font-extrabold tracking-[-2px] mb-1 font-syne">
         {price}
         <span className="text-lg font-normal text-[#6b7c9a]">{period}</span>
       </div>
@@ -1416,8 +1452,7 @@ function ContactSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4"
-            style={{ fontFamily: 'Syne, sans-serif' }}
+            className="text-3xl md:text-5xl font-extrabold tracking-[-2px] mb-4 font-syne"
           >
             Let's Work<br />
             <span className="text-[#f0c040]">Together</span>
@@ -1512,7 +1547,7 @@ function Footer() {
     <footer className="border-t border-white/5 py-12 px-6 md:px-16 bg-[#020408]">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex flex-col items-center md:items-start gap-2">
-          <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent" style={{ fontFamily: 'Syne, sans-serif' }}>
+          <div className="text-2xl font-extrabold bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent font-syne">
             ADIT
           </div>
           <div className="text-[11px] font-medium tracking-widest uppercase text-[#6b7c9a]/60">

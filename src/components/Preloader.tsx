@@ -34,8 +34,7 @@ export default function Preloader() {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tighter"
-              style={{ fontFamily: 'Syne, sans-serif' }}
+              className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tighter font-syne"
             >
               <span className="bg-gradient-to-br from-[#f0c040] to-[#38d9f5] bg-clip-text text-transparent">
                 ADIT
