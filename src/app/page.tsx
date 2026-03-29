@@ -107,28 +107,83 @@ function Navigation() {
           ADIT
         </div>
         <div className="hidden md:flex items-center gap-8">
-          <a href="#skills" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
-            Skills
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a href="#examples" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
-            Examples
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a href="#pricing" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
-            Pricing
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a href="#contact" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
-            Contact
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
-          </a>
+          <NavLink href="#skills">Skills</NavLink>
+          <NavLink href="#examples">Examples</NavLink>
+          <NavLink href="#pricing">Pricing</NavLink>
+          <NavLink href="#contact">Contact</NavLink>
         </div>
-        <a href="#pricing" className="px-5 py-2 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-bold text-[11px] tracking-wider uppercase hover:shadow-[0_0_30px_rgba(56,217,245,0.4)] transition-all duration-300 hover:scale-105">
-          Hire Me
-        </a>
+        <MagneticButton>
+          <a href="#pricing" className="px-5 py-2 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-bold text-[11px] tracking-wider uppercase hover:shadow-[0_0_30px_rgba(56,217,245,0.4)] transition-all duration-300 block">
+            Hire Me
+          </a>
+        </MagneticButton>
       </div>
     </nav>
+  )
+}
+
+function NavLink({ href, children }: { href: string; children: string }) {
+  return (
+    <a href={href} className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#6b7c9a] hover:text-[#38d9f5] transition-all duration-300 relative group">
+      <ScrambleText text={children} />
+      <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#38d9f5] transition-all duration-300 group-hover:w-full" />
+    </a>
+  )
+}
+
+function ScrambleText({ text }: { text: string }) {
+  const [displayText, setDisplayText] = useState(text)
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  const scramble = () => {
+    let iterations = 0
+    const interval = setInterval(() => {
+      setDisplayText(prev =>
+        text.split('').map((char, index) => {
+          if (index < iterations) return text[index]
+          return characters[Math.floor(Math.random() * characters.length)]
+        }).join('')
+      )
+
+      if (iterations >= text.length) clearInterval(interval)
+      iterations += 1/3
+    }, 30)
+  }
+
+  return (
+    <span onMouseEnter={scramble}>
+      {displayText}
+    </span>
+  )
+}
+
+function MagneticButton({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return
+    const { clientX, clientY } = e
+    const { left, top, width, height } = ref.current.getBoundingClientRect()
+    const x = clientX - (left + width / 2)
+    const y = clientY - (top + height / 2)
+    setPosition({ x: x * 0.35, y: y * 0.35 })
+  }
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 })
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      {children}
+    </motion.div>
   )
 }
 
@@ -253,6 +308,7 @@ function ParticleNetwork() {
 function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
+  const [cursorText, setCursorText] = useState('')
   const [isHovering, setIsHovering] = useState(false)
 
   useEffect(() => {
@@ -285,15 +341,21 @@ function CustomCursor() {
 
     function handleMouseOver(e: MouseEvent) {
       const target = e.target as HTMLElement
-      if (target.closest('a, button, .skill-card, .example-card, .pricing-card, [data-cursor-hover]')) {
+      const hoverEl = target.closest('a, button, .skill-card, .example-card, .pricing-card, [data-cursor-hover], [data-cursor-text]') as HTMLElement
+
+      if (hoverEl) {
         setIsHovering(true)
+        const text = hoverEl.getAttribute('data-cursor-text')
+        if (text) setCursorText(text)
       }
     }
 
     function handleMouseOut(e: MouseEvent) {
       const target = e.target as HTMLElement
-      if (target.closest('a, button, .skill-card, .example-card, .pricing-card, [data-cursor-hover]')) {
+      const hoverEl = target.closest('a, button, .skill-card, .example-card, .pricing-card, [data-cursor-hover], [data-cursor-text]')
+      if (hoverEl) {
         setIsHovering(false)
+        setCursorText('')
       }
     }
 
@@ -314,15 +376,25 @@ function CustomCursor() {
     <>
       <div
         ref={cursorRef}
-        className="fixed pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:block mix-blend-screen"
+        className="fixed pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center justify-center mix-blend-screen overflow-hidden"
         style={{
-          width: isHovering ? '20px' : '12px',
-          height: isHovering ? '20px' : '12px',
+          width: isHovering ? (cursorText ? '80px' : '20px') : '12px',
+          height: isHovering ? (cursorText ? '80px' : '20px') : '12px',
           background: isHovering ? '#f0c040' : '#38d9f5',
           borderRadius: '50%',
-          transition: 'width 0.2s, height 0.2s, background 0.2s',
+          transition: 'width 0.3s cubic-bezier(0.23, 1, 0.32, 1), height 0.3s cubic-bezier(0.23, 1, 0.32, 1), background 0.2s',
         }}
-      />
+      >
+        {cursorText && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-[10px] font-black tracking-tighter text-black"
+          >
+            {cursorText}
+          </motion.span>
+        )}
+      </div>
       <div
         ref={ringRef}
         className="fixed pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 hidden md:block"
@@ -577,20 +649,24 @@ function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
           style={{ transform: 'translateZ(30px)' }}
         >
-          <a
-            href="#examples"
-            data-cursor-hover
-            className="px-8 py-3.5 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-semibold text-sm hover:shadow-[0_0_50px_rgba(56,217,245,0.5)] transition-all duration-300 hover:scale-105"
-          >
-            View My Work
-          </a>
-          <a
-            href="#pricing"
-            data-cursor-hover
-            className="px-8 py-3.5 rounded-full border border-[rgba(99,179,237,0.12)] text-white font-medium text-sm hover:border-[#38d9f5] hover:text-[#38d9f5] hover:bg-[rgba(56,217,245,0.05)] transition-all duration-300"
-          >
-            Get a Quote
-          </a>
+          <MagneticButton>
+            <a
+              href="#examples"
+              data-cursor-hover
+              className="px-8 py-3.5 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-semibold text-sm hover:shadow-[0_0_50px_rgba(56,217,245,0.5)] transition-all duration-300 block"
+            >
+              View My Work
+            </a>
+          </MagneticButton>
+          <MagneticButton>
+            <a
+              href="#pricing"
+              data-cursor-hover
+              className="px-8 py-3.5 rounded-full border border-[rgba(99,179,237,0.12)] text-white font-medium text-sm hover:border-[#38d9f5] hover:text-[#38d9f5] hover:bg-[rgba(56,217,245,0.05)] transition-all duration-300 block"
+            >
+              Get a Quote
+            </a>
+          </MagneticButton>
         </motion.div>
       </motion.div>
 
@@ -820,16 +896,26 @@ function ExamplesSection() {
           </motion.p>
         </div>
 
-        {/* ✏️ EDIT EXAMPLES BELOW - Modify the examples array above */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {examples.map((example, index) => (
-            <ExampleCard
-              key={example.title}
-              {...example}
-              isInView={isInView}
-              delay={index * 0.1}
-            />
-          ))}
+        {/* ✏️ EDIT EXAMPLES BELOW - Bento Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[300px]">
+          <ExampleCard
+            {...examples[0]}
+            isInView={isInView}
+            delay={0}
+            className="md:col-span-2 md:row-span-2"
+          />
+          <ExampleCard
+            {...examples[1]}
+            isInView={isInView}
+            delay={0.1}
+            className="md:col-span-2 md:row-span-1"
+          />
+          <ExampleCard
+            {...examples[2]}
+            isInView={isInView}
+            delay={0.2}
+            className="md:col-span-2 md:row-span-1"
+          />
         </div>
         {/* END EXAMPLES */}
       </div>
@@ -844,7 +930,8 @@ function ExampleCard({
   animationType,
   isInView,
   delay,
-  link
+  link,
+  className = ""
 }: {
   title: string
   tag: string
@@ -853,45 +940,89 @@ function ExampleCard({
   isInView: boolean
   delay: number
   link: string
+  className?: string
 }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [rotateX, setRotateX] = useState(0)
+  const [rotateY, setRotateY] = useState(0)
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    setRotateY(x * 10)
+    setRotateX(-y * 10)
+  }
+
+  const handleMouseLeave = () => {
+    setRotateX(0)
+    setRotateY(0)
+  }
+
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay }}
-      whileHover={{ y: -12, scale: 1.03 }}
-      className="group relative rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.02] backdrop-blur-sm hover:shadow-[0_30px_80px_rgba(0,0,0,0.5)] transition-all duration-500"
-      data-cursor-hover
+      className={`group relative rounded-3xl overflow-hidden border border-white/[0.08] bg-[#0d121f] hover:border-[#38d9f5]/30 transition-all duration-500 ${className}`}
+      style={{
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transformStyle: 'preserve-3d',
+      }}
+      data-cursor-text="VIEW"
     >
       {/* Animated Canvas Preview */}
-      <div className="relative h-52 bg-[#0a0f1a] overflow-hidden">
-        <MiniCanvas type={animationType} />
+      <div className="relative h-full w-full overflow-hidden flex flex-col">
+        <div className="relative flex-1 bg-[#0a0f1a] overflow-hidden">
+          <MiniCanvas type={animationType} />
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1424] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
-          <a href={link} className="px-5 py-2.5 rounded-full bg-gradient-to-br from-[#38d9f5] to-[#4c8ef7] text-black font-semibold text-xs">
-            View Pricing →
-          </a>
+          {/* Animated Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0d121f] via-transparent to-transparent" />
+        </div>
+
+        {/* Content */}
+        <div className="p-8 absolute bottom-0 left-0 right-0 z-10">
+          <motion.div
+            style={{ transform: 'translateZ(30px)' }}
+            className="text-[10px] tracking-[0.2em] uppercase text-[#38d9f5] mb-3 font-bold opacity-80"
+          >
+            {tag}
+          </motion.div>
+          <h3
+            style={{ transform: 'translateZ(50px)', fontFamily: 'Syne, sans-serif' }}
+            className="text-2xl font-extrabold mb-4 group-hover:text-[#38d9f5] transition-colors leading-tight"
+          >
+            {title}
+          </h3>
+          <p
+            style={{ transform: 'translateZ(20px)' }}
+            className="text-[14px] text-[#6b7c9a] leading-relaxed line-clamp-2 mb-6 group-hover:text-[#e8edf5]/80 transition-colors"
+          >
+            {description}
+          </p>
+          <MagneticButton>
+            <a
+              href={link}
+              className="inline-flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-[#38d9f5] group/btn"
+            >
+              Explore Project
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                →
+              </motion.span>
+            </a>
+          </MagneticButton>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6">
-        <div className="text-[10px] tracking-[0.12em] uppercase text-[#38d9f5] mb-2 font-bold">{tag}</div>
-        <h3 className="text-xl font-bold mb-3 group-hover:text-[#38d9f5] transition-colors text-balance" style={{ fontFamily: 'Syne, sans-serif' }}>
-          {title}
-        </h3>
-        <p className="text-[13px] text-[#6b7c9a] leading-relaxed line-clamp-2">
-          {description}
-        </p>
-        <a
-          href={link}
-          data-cursor-hover
-          className="inline-flex items-center gap-2 text-xs text-[#38d9f5] mt-4 font-medium group-hover:gap-3 transition-all"
-        >
-          View Pricing →
-        </a>
-      </div>
+      {/* Highlight glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#38d9f5]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
     </motion.div>
   )
 }
@@ -1308,6 +1439,7 @@ function ContactSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="space-y-5"
+          data-cursor-text="SEND"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

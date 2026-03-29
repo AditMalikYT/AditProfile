@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Syne, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import Preloader from "@/components/Preloader";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -61,6 +62,7 @@ export default function RootLayout({
       <body
         className={`antialiased bg-background text-foreground font-sans`}
       >
+        <Preloader />
         {children}
         <Toaster />
       </body>
